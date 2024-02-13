@@ -17,9 +17,7 @@ export function renderHeaderComponent({ element }) {
           ? `<button title="${user.name}" class="header-button logout-button">Выйти</button>`
           : ""
       }  
-  </div>
-  
-`;
+  </div>`;
 
   element
     .querySelector(".add-or-login-button")

@@ -1,4 +1,4 @@
-import { getPosts } from "./api.js";
+import { getPosts, getUserPosts } from "./api.js";
 import { renderAddPostPageComponent } from "./components/add-post-page-component.js";
 import { renderAuthPageComponent } from "./components/auth-page-component.js";
 import {
@@ -15,6 +15,7 @@ import {
   removeUserFromLocalStorage,
   saveUserToLocalStorage,
 } from "./helpers.js";
+import { renderHeaderComponent } from "./components/header-component.js";
 
 export let user = getUserFromLocalStorage();
 export let page = null;
@@ -67,11 +68,14 @@ export const goToPage = (newPage, data) => {
     }
 
     if (newPage === USER_POSTS_PAGE) {
-      // TODO: реализовать получение постов юзера из API
-      console.log("Открываю страницу пользователя: ", data.userId);
-      page = USER_POSTS_PAGE;
-      posts = [];
-      return renderApp();
+        // TODO: реализовать получение постов юзера из AP
+        return  getUserPosts({ id: data.id})
+        .then(() => {
+        page = USER_POSTS_PAGE;
+        posts = [];
+        console.log("Открываю страницу пользователя: ", data.id);
+        renderApp();
+      })
     }
 
     page = newPage;
@@ -125,7 +129,35 @@ const renderApp = () => {
 
   if (page === USER_POSTS_PAGE) {
     // TODO: реализовать страницу фотографию пользвателя
-    appEl.innerHTML = "Здесь будет страница фотографий пользователя";
+    appEl.innerHTML = `
+    <div class="page-container">
+      <div class="header-container"></div>
+      <ul class="posts">
+        <li class="post">
+          <div class="post-header" data-user-id=${id}>
+              <img src="https://www.imgonline.com.ua/examples/bee-on-daisy.jpg" class="post-header__user-image">
+              <p class="post-header__user-name">Иван Иваныч</p>
+          </div>
+          <div class="post-image-container">
+            <img class="post-image" src="https://www.imgonline.com.ua/examples/bee-on-daisy.jpg">
+          </div>
+          <div class="post-likes">
+            <button data-post-id="642d00579b190443860c2f32" class="like-button">
+              <img src="./assets/images/like-active.svg">
+            </button>
+            <p class="post-likes-text">
+              Нравится: <strong>2</strong>
+            </p>
+          </div>
+          <p class="post-text">
+            <span class="user-name">Иван Иваныч</span>
+            Ромашка, ромашка...
+          </p>
+          <p class="post-date">
+            19 минут назад
+          </p>
+        </li>
+    </div>`;
     return;
   }
 };
